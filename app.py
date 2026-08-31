@@ -224,6 +224,32 @@ def append_feedback(user_id, source, context, row, label):
         writer.writerows(existing_rows)
 
 
+def remove_feedback(user_id, source, context, row):
+    """
+    "변경" 버튼을 눌렀을 때 호출됨. 예전엔 session_state만 초기화해서
+    버튼을 다시 보여주기만 하고 feedback.csv의 기존 기록은 그대로 남아있어서,
+    "변경"을 눌러도 사이드바의 피드백 개수가 줄지 않는 문제가 있었음
+    (2026-08-31, ISSUES.md 참고). "변경"은 실질적으로 "이 투표를 취소한다"는
+    뜻이므로, append_feedback과 같은 키로 기존 행을 찾아서 실제로 지운다.
+    """
+    if not os.path.exists(FEEDBACK_PATH):
+        return
+
+    with open(FEEDBACK_PATH, newline="", encoding="utf-8") as f:
+        existing_rows = list(csv.DictReader(f))
+
+    key = (user_id, source, context, row["track_name"], row["artists"])
+    existing_rows = [
+        r for r in existing_rows
+        if (r["user_id"], r["source"], r["context"], r["track_name"], r["artists"]) != key
+    ]
+
+    with open(FEEDBACK_PATH, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=FEEDBACK_FIELDS)
+        writer.writeheader()
+        writer.writerows(existing_rows)
+
+
 def count_feedback(user_id=None):
     """user_id를 주면 그 사람 것만, 안 주면 전체 행 수를 센다."""
     if not os.path.exists(FEEDBACK_PATH):
@@ -288,6 +314,7 @@ def render_result_cards(results, source, context, user_id):
                     st.caption(label)
                 with col2:
                     if st.button(t("change_vote_button"), key=f"{vote_key}_reset"):
+                        remove_feedback(user_id, source, context, row)
                         st.session_state[vote_key] = None
                         st.rerun()
 
