@@ -22,9 +22,11 @@
   실제 Streamlit 앱에서 "장맛비라 꿀꿀하다" -> "장마" 의미 매칭 성공까지
   End-to-End 확인함 (stage4-2f). 다음 우선순위: (1) 재랭킹 모델(피드백 쌓인
   다음) / (3) K-means 부활 / (4) 정량 평가 / GitHub 업로드 중 결정 필요.
-- **GitHub 업로드**: 아직 안 함. 로컬 폴더는 리크루터가 접근 못 하니 나중에
-  꼭 올리기로 함(README + 커밋 히스토리 + 필요하면 Streamlit Cloud 배포까지).
-  `.gitignore`에 data/*.csv, .env, __pycache__/ 이미 잘 걸려있음 확인함.
+- **GitHub 업로드**: 완료 (2026-08-31). `git init` -> README.md 작성 ->
+  `.env`/원본 데이터셋 CSV가 `.gitignore`로 잘 빠지는지 확인 -> 첫 커밋
+  (`f4e5ac5`, 14개 파일) -> https://github.com/Hyoungmin2/mood-song-recommender
+  로 push. `feedback.csv`는 의도적으로 커밋에 포함(프로젝트 자체 학습
+  데이터라 계속 추적할 계획). 다음: Streamlit Cloud 배포는 아직 안 함.
 
 ## stage3: Streamlit 앱 (app.py) 첫 버전 (2026-08-22)
 
@@ -671,3 +673,34 @@ min이 로컬에서 `python3 -m streamlit run app.py`로 실제 앱을 띄우고
 stage4-2(임베딩 기반 상황 텍스트 파서) End-to-End 검증까지 완료. 다음은
 stage4 나머지 항목(피드백 기반 재랭킹 모델, K-means 취향 클러스터링 부활,
 정량 평가) 또는 GitHub 업로드 중 다음 우선순위 결정 필요.
+
+## GitHub 업로드 완료 (2026-08-31)
+
+### 작업 내용
+
+로컬 프로젝트 폴더를 git 저장소로 초기화하고 GitHub에 처음 올림.
+
+1. `git init` (원격 개발 환경에서 실행 - 실제 폴더가 로컬에 마운트돼있어서
+   실제 파일에 바로 반영됨). git 커밋 작성자 정보(이름/이메일)를 설정함 -
+   이메일은 berkeley.edu 계정 사용을 선택함 (GitHub 계정에 등록/인증된
+   이메일과 일치해야 커밋이 프로필에 제대로 연결된다는 점 확인하고 결정).
+2. `README.md` 새로 작성 - 프로젝트 개요, 주요 기능, 기술 스택, 설치/실행
+   방법(Kaggle 원본 데이터셋은 저장소에 포함 안 하므로 직접 받아서
+   `build_dataset.py`로 생성해야 함을 명시), 개발 히스토리 요약, `ISSUES.md`
+   링크 포함.
+3. `.gitignore` 재확인: `data/*.csv`(원본+정제 데이터셋, 각각 20MB/5.7MB),
+   `.env`(실제로는 존재하지 않았음, `.env.example`만 커밋됨) 정상 제외 확인.
+   `feedback.csv`는 의도적으로 포함(프로젝트 자체가 만든 학습용 데이터).
+4. 첫 커밋(`f4e5ac5`, 14개 파일, 1851줄) 생성.
+5. GitHub에서 빈 저장소(`mood-song-recommender`, Public, README/gitignore/
+   license 전부 미체크) 생성 후, min이 본인 Mac 터미널에서
+   `git remote add origin` + `git push -u origin main`으로 push.
+6. push 후 GitHub 저장소 파일 목록과 커밋 해시(`f4e5ac5`)가 로컬과 정확히
+   일치함을 확인함.
+
+### 결론
+
+프로젝트가 이제 https://github.com/Hyoungmin2/mood-song-recommender 에
+공개돼있음. 다음 단계 후보: Streamlit Community Cloud 배포(설치 없이
+누구나 접속해서 임베딩 기능까지 체험 가능하게), 또는 stage4 나머지 ML
+항목(재랭킹 모델, K-means 부활, 정량 평가) 진행.
