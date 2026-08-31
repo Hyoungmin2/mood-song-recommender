@@ -1106,3 +1106,46 @@ artist가 주어지면 그 아티스트가 걸쳐있는 장르로 먼저 좁히�
    새 피드백이 들어올 때마다 계속 업데이트.
 3. 구체적인 임계치 숫자(사용자당 몇 개, 전체 몇 개), 재랭킹 알고리즘
    선택 등은 아직 미정 - 데이터가 더 쌓인 뒤 재논의하기로 함.
+
+## 음색(timbre) 기반 추천 가능 여부 논의 (2026-08-31)
+
+### 논의 배경
+
+min이 "음색 같은 것도 추천에 반영할 수 있냐"고 질문함. 지금 추천
+로직이 audio feature(에너지, 밝기 등) 기준으로만 곡을 비교하다 보니,
+곡의 톤/음색까지 반영할 수 있는지 확인이 필요했음.
+
+### 확인한 사실
+
+`data/stage2_dataset.csv`의 실제 컬럼을 확인한 결과:
+
+```
+track_id, artists, album_name, track_name, popularity, duration_ms,
+explicit, danceability, energy, key, loudness, mode, speechiness,
+acousticness, instrumentalness, liveness, valence, tempo,
+time_signature, track_genre
+```
+
+전부 Spotify의 "audio-features"(곡 전체를 요약한 수치 지표) API에서
+나온 값이고, 음색 정보는 포함돼 있지 않음.
+
+음색은 이것과 전혀 다른 데이터 소스인 Spotify "audio-analysis" API에서
+제공함 - 곡을 수백 개의 짧은 구간(segment)으로 쪼갠 뒤 구간마다
+timbre라는 12차원 벡터(MFCC와 유사한, 음색을 수치화한 값)를 부여하는
+방식. 지금처럼 "곡 하나 = 숫자 몇 개짜리 벡터 하나"가 아니라 "곡 하나 =
+구간 수백 개 x 12차원" 구조라서, 데이터 형태 자체가 다름.
+
+### 결론
+
+원리적으로 불가능한 작업은 아니지만, 지금 구조에 키워드나 컬럼 하나
+추가하는 수준이 아니라 별도 프로젝트에 가까움:
+
+1. 현재 데이터셋(Kaggle 원본)에는 음색 데이터가 아예 없어서, 곡마다
+   Spotify audio-analysis API를 따로 호출해서 새로 수집해야 함 (곡
+   수가 33,992개라 호출량이 많음).
+2. 세그먼트별 벡터를 그대로 쓸 수 없고, 곡 하나를 대표하는 값으로
+   압축(평균, 임베딩 등)하는 별도 처리가 필요함 - 지금의 "target 벡터 1개
+   vs 유클리드 거리" 방식과는 다른 접근이 필요함.
+
+당장은 보류하고, stage4(재랭킹 모델) 마무리 이후 확장 후보로만
+남겨둠 - 구체적인 착수 시점/방식은 미정.
