@@ -105,9 +105,11 @@ class SongRecommender:
 
         return self.df[self.df["track_name"] == matches[0]].index[0]
 
-    def recommend(self, title, artist=None, top_n=10, prefer_same_genre=True):
+    def recommend(self, title, artist=None, top_n=10, prefer_same_genre=True, lang="ko"):
         idx = self.find_song(title, artist)
         if idx is None:
+            if lang == "en":
+                return None, f"Couldn't find '{title}' in the dataset (try a different spelling)", None
             return None, f"'{title}'을(를) 데이터셋에서 찾을 수 없음 (다른 표기로 시도해볼 것)", None
 
         query_pos = self.df.index.get_loc(idx)
@@ -120,10 +122,16 @@ class SongRecommender:
                 pool_positions = np.where(genre_mask)[0]
             else:
                 pool_positions = np.arange(len(self.df))
-                note = (
-                    f"'{genre}' 장르 후보가 {MIN_GENRE_POOL}곡 미만이라 "
-                    f"전체 데이터셋에서 찾음"
-                )
+                if lang == "en":
+                    note = (
+                        f"Fewer than {MIN_GENRE_POOL} songs in the '{genre}' genre, "
+                        f"so searched the whole dataset"
+                    )
+                else:
+                    note = (
+                        f"'{genre}' 장르 후보가 {MIN_GENRE_POOL}곡 미만이라 "
+                        f"전체 데이터셋에서 찾음"
+                    )
         else:
             pool_positions = np.arange(len(self.df))
 
@@ -140,7 +148,7 @@ class SongRecommender:
         return result, None, note
 
     def recommend_by_target(
-        self, target_features, top_n=10, use_mood_whitelist=True, artist=None
+        self, target_features, top_n=10, use_mood_whitelist=True, artist=None, lang="ko"
     ):
         """
         곡 제목이 아니라 목표 오디오 특징값(dict)을 입력받아 가장 가까운 곡 추천.
@@ -163,7 +171,10 @@ class SongRecommender:
                 self.df["artists"].str.contains(artist, case=False, na=False)
             ]
             if artist_rows.empty:
-                note = f"'{artist}'을(를) 데이터셋에서 찾을 수 없어서 무드 장르로 대체함"
+                if lang == "en":
+                    note = f"Couldn't find '{artist}' in the dataset, so used the mood-genre whitelist instead"
+                else:
+                    note = f"'{artist}'을(를) 데이터셋에서 찾을 수 없어서 무드 장르로 대체함"
             else:
                 artist_positions = artist_rows.index.to_numpy()
                 artist_dists = euclidean_distances(
@@ -175,15 +186,27 @@ class SongRecommender:
                 genre_mask = self.df["track_genre"].isin(artist_genres).to_numpy()
                 if genre_mask.sum() >= MIN_GENRE_POOL:
                     pool_positions = np.where(genre_mask)[0]
-                    note = (
-                        f"1위는 '{artist}' 본인 곡 중 가장 가까운 곡으로 고정, "
-                        f"나머지는 '{artist}'의 장르({', '.join(sorted(artist_genres))}) 기준으로 찾음"
-                    )
+                    if lang == "en":
+                        note = (
+                            f"#1 pick is fixed to the closest track by '{artist}'; the rest are "
+                            f"chosen from the genre(s) of '{artist}' ({', '.join(sorted(artist_genres))})"
+                        )
+                    else:
+                        note = (
+                            f"1위는 '{artist}' 본인 곡 중 가장 가까운 곡으로 고정, "
+                            f"나머지는 '{artist}'의 장르({', '.join(sorted(artist_genres))}) 기준으로 찾음"
+                        )
                 else:
-                    note = (
-                        f"1위는 '{artist}' 본인 곡 중 가장 가까운 곡으로 고정, "
-                        f"나머지는 장르 후보가 너무 적어서 무드 장르로 대체함"
-                    )
+                    if lang == "en":
+                        note = (
+                            f"#1 pick is fixed to the closest track by '{artist}'; too few genre "
+                            f"candidates, so used the mood-genre whitelist for the rest"
+                        )
+                    else:
+                        note = (
+                            f"1위는 '{artist}' 본인 곡 중 가장 가까운 곡으로 고정, "
+                            f"나머지는 장르 후보가 너무 적어서 무드 장르로 대체함"
+                        )
 
         if pool_positions is None:
             if use_mood_whitelist:
@@ -192,9 +215,12 @@ class SongRecommender:
                     pool_positions = np.where(mood_mask)[0]
                 else:
                     pool_positions = np.arange(len(self.df))
-                    note = (note + " / " if note else "") + (
+                    extra = (
+                        "Too few candidates in the mood-genre whitelist, so searched the whole dataset"
+                        if lang == "en" else
                         "무드 장르 화이트리스트 후보가 너무 적어서 전체 데이터셋에서 찾음"
                     )
+                    note = (note + " / " if note else "") + extra
             else:
                 pool_positions = np.arange(len(self.df))
 

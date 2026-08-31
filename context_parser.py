@@ -188,12 +188,18 @@ def _get_concept_embeddings():
     return _concept_embeddings
 
 
-def _semantic_matches(text, exclude_keywords):
+def _semantic_matches(text, exclude_keywords, lang="ko"):
     """
     1단계(substring)에서 이미 잡힌 키워드는 제외하고, 나머지 개념들에 대해
     문장 임베딩 <-> 예문 임베딩 코사인 유사도를 비교한다. 개념별로 예문 중
     최댓값 유사도가 threshold를 넘으면 매칭으로 판단.
     반환: [(표시용 라벨, delta dict), ...]
+
+    lang="en"이면 라벨의 안내 문구("의미유사"/"예문:")만 영어로 바꾸고,
+    실제로 매칭된 키워드/예문 자체는 그대로 한국어로 남김 - 이건 번역이
+    아니라 "입력 문장에서 실제로 이 한국어 표현이 감지됐다"는 사실을
+    보여주는 거라, 매칭된 원문(한국어)을 영어로 바꾸면 오히려 무슨 근거로
+    매칭됐는지 알 수 없게 됨.
     """
     from sentence_transformers import util
 
@@ -212,18 +218,24 @@ def _semantic_matches(text, exclude_keywords):
         best_idx = int(sims.argmax())
         best_sim = float(sims[best_idx])
         if best_sim >= EMBEDDING_SIMILARITY_THRESHOLD:
-            label = f"{keywords[0]}(의미유사 {best_sim:.2f}, 예문:'{examples[best_idx]}')"
+            if lang == "en":
+                label = f"{keywords[0]} (semantic match {best_sim:.2f}, example: '{examples[best_idx]}')"
+            else:
+                label = f"{keywords[0]}(의미유사 {best_sim:.2f}, 예문:'{examples[best_idx]}')"
             results.append((label, adjustments))
     return results
 
 
-def parse_context(text, df, use_embedding=True):
+def parse_context(text, df, use_embedding=True, lang="ko"):
     """
     문장에서 키워드를 찾아 데이터셋 평균 기준으로 조정된 목표 특징 벡터를 만든다.
     df: 오디오 특징 평균을 계산할 기준 데이터셋 (보통 stage2_dataset.csv)
     use_embedding: True면 1단계(substring) 이후 2단계(임베딩 의미 매칭)도
         시도한다. sentence-transformers가 설치 안 돼있으면 자동으로 1단계
         결과만 반환(에러 없이 조용히 폴백 - 기존 동작 그대로 보존).
+    lang: "en"이면 임베딩 매칭 라벨의 안내 문구만 영어로 바꿈(2026-08-31
+        영어 UI 토글 추가 - _semantic_matches 참고). 1단계 substring
+        매칭은 원래 키워드를 그대로 보여주므로 lang과 무관하게 항상 동일.
     반환: dict {feature_name: target_value}, 그리고 매칭된 키워드 리스트
         (임베딩으로 매칭된 항목은 "키워드(의미유사 0.xx, 예문:'...')" 형식으로 구분 표시)
     """
@@ -243,7 +255,7 @@ def parse_context(text, df, use_embedding=True):
     # 2단계: 임베딩 의미 매칭 (선택적, 라이브러리 없으면 자동 스킵)
     if use_embedding:
         try:
-            semantic_hits = _semantic_matches(text, matched_raw_keywords)
+            semantic_hits = _semantic_matches(text, matched_raw_keywords, lang=lang)
         except ImportError:
             semantic_hits = []
         for label, adjustments in semantic_hits:

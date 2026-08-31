@@ -48,7 +48,103 @@ FEEDBACK_FIELDS = [
 ]
 DEFAULT_USER_ID = "guest"
 
-st.set_page_config(page_title="무드 노래 추천", page_icon="🎧", layout="centered")
+# --- 2026-08-31 추가: 한국어/영어 UI 토글 ---
+# 리크루터에게 보여줄 때는 영어로 보여줘야 해서, UI 문구(라벨/버튼/캡션)를
+# 전부 영어로 바꿀 수 있는 토글을 추가함. 다만 상황 텍스트 매칭 로직
+# (KEYWORD_RULES, CONCEPT_EXAMPLE_SENTENCES)은 한국어 문장에 맞춰
+# 만들어진 거라서, 실제 "지금 기분" 입력창은 영어 모드에서도 한국어로
+# 입력해야 의도대로 동작함 - 이건 번역이 아니라 한국어 NLP를 보여주는
+# 프로젝트라서, 영어 모드에서는 대신 안내 문구를 하나 더 보여줌.
+LANG_LABELS = {"ko": "한국어", "en": "English"}
+
+T = {
+    "page_title": {"ko": "무드 노래 추천", "en": "Mood Song Recommender"},
+    "app_title": {"ko": "🎧 무드 노래 추천", "en": "🎧 Mood Song Recommender"},
+    "app_caption": {
+        "ko": "stage2 추천 엔진(장르 우선 필터링 + 유클리드 거리)을 그대로 쓰는 웹 버전. "
+              "곡 제목으로 비슷한 곡을 찾거나, 지금 기분을 문장으로 적어서 추천받을 수 있어요.",
+        "en": "A web version of the stage2 recommendation engine (genre-first filtering + "
+              "Euclidean distance). Find songs similar to one you like, or describe your "
+              "mood in a sentence to get recommendations.",
+    },
+    "sidebar_user_header": {"ko": "👤 사용자", "en": "👤 User"},
+    "sidebar_user_caption": {
+        "ko": "비밀번호 없는 가벼운 구분용이에요. 좋아요/스킵을 이 이름으로 기록해요.",
+        "en": "A lightweight, password-free identifier. Your likes/skips are logged under this name.",
+    },
+    "nickname_label": {"ko": "닉네임", "en": "Nickname"},
+    "nickname_placeholder": {"ko": "예: 민", "en": "e.g. Min"},
+    "current_user": {"ko": "현재: **{user_id}**", "en": "Current: **{user_id}**"},
+    "feedback_counts": {
+        "ko": "{user_id}: {mine}개  \n전체 피드백: {total}개 (stage4 재랭킹 모델 학습용)",
+        "en": "{user_id}: {mine}  \nTotal feedback: {total} (training data for the stage4 re-ranking model)",
+    },
+    "new_feedback_alert": {
+        "ko": "🔔 배포 이후 새 피드백 {n}개 - 재부팅 전에 다운로드하세요",
+        "en": "🔔 {n} new feedback entries since deploy - download before this app reboots",
+    },
+    "no_new_feedback": {
+        "ko": "현재 배포 상태와 동일 (새로 쌓인 피드백 없음)",
+        "en": "Matches the current deployment (no new feedback)",
+    },
+    "download_button": {"ko": "⬇️ feedback.csv 다운로드", "en": "⬇️ Download feedback.csv"},
+    "download_help": {
+        "ko": "지금 서버에 쌓인 전체 피드백을 내려받아요. "
+              "이 앱이 재부팅되면 여기서 받은 것 외의 기록은 사라져요.",
+        "en": "Downloads all feedback currently on the server. Anything not downloaded "
+              "here is lost when this app reboots.",
+    },
+    "tab_song": {"ko": "🎵 곡으로 찾기", "en": "🎵 Find by song"},
+    "tab_mood": {"ko": "💭 지금 기분으로 찾기", "en": "💭 Find by mood"},
+    "song_subheader": {"ko": "좋아하는 곡과 비슷한 곡 찾기", "en": "Find songs similar to one you like"},
+    "song_query_label": {"ko": "곡 제목을 입력해보세요", "en": "Enter a song title"},
+    "song_query_placeholder": {"ko": "예: bad guy", "en": "e.g. bad guy"},
+    "song_not_found": {
+        "ko": "'{query}'와 비슷한 곡을 찾을 수 없어요. 다른 표기로 시도해보세요.",
+        "en": "Couldn't find anything close to '{query}'. Try a different spelling.",
+    },
+    "song_choice_label": {"ko": "찾는 곡이 있으면 골라주세요", "en": "Pick the song you meant, if it's here"},
+    "song_recommend_button": {"ko": "이 곡과 비슷한 곡 추천받기", "en": "Recommend songs like this"},
+    "mood_subheader": {
+        "ko": "지금 기분/날씨/걷는 속도로 찾기",
+        "en": "Find by mood / weather / walking pace",
+    },
+    "mood_text_label": {
+        "ko": "지금 상황을 자유롭게 적어보세요",
+        "en": "Describe your current mood freely",
+    },
+    "mood_text_placeholder": {"ko": "예: 오늘 비오고 기분 칙칙해", "en": "예: 오늘 비오고 기분 칙칙해"},
+    "mood_ko_only_hint": {
+        "ko": "",
+        "en": "ℹ️ This project's mood/weather matching (rule-based keywords + Korean sentence "
+              "embeddings) is built for Korean text. Type your mood in Korean (like the "
+              "placeholder above) to see it match as intended.",
+    },
+    "mood_artist_label": {"ko": "선호하는 가수 (없으면 비워두세요)", "en": "Preferred artist (leave blank if none)"},
+    "mood_artist_placeholder": {"ko": "예: Billie Eilish", "en": "e.g. Billie Eilish"},
+    "mood_recommend_button": {"ko": "지금 상황에 어울리는 곡 추천받기", "en": "Recommend songs for this mood"},
+    "no_keywords_matched": {
+        "ko": "인식된 키워드가 없어서 데이터셋 평균값 기준으로 추천했어요.",
+        "en": "No keywords were recognized, so recommendations are based on the dataset average.",
+    },
+    "matched_keywords": {"ko": "인식된 키워드: {keywords}", "en": "Recognized keywords: {keywords}"},
+    "like_button": {"ko": "👍 좋아요", "en": "👍 Like"},
+    "skip_button": {"ko": "👎 스킵", "en": "👎 Skip"},
+    "liked_label": {"ko": "🙏 좋아요 기록됨", "en": "🙏 Liked - recorded"},
+    "skipped_label": {"ko": "🙏 스킵 기록됨", "en": "🙏 Skipped - recorded"},
+    "change_vote_button": {"ko": "변경", "en": "Change"},
+    "distance_caption": {"ko": "거리 {d:.3f} (작을수록 유사)", "en": "distance {d:.3f} (lower = more similar)"},
+}
+
+
+def t(key, **kwargs):
+    lang = st.session_state.get("lang", "ko")
+    text = T[key][lang]
+    return text.format(**kwargs) if kwargs else text
+
+
+st.session_state.setdefault("lang", "ko")
+st.set_page_config(page_title=t("page_title"), page_icon="🎧", layout="centered")
 
 
 @st.cache_resource(show_spinner="데이터셋 불러오는 중...")
@@ -162,7 +258,7 @@ def render_result_cards(results, source, context, user_id):
             st.caption(f"{row['artists']} · {row['track_genre']}")
             st.progress(
                 max(0.0, min(1.0, 1 - row["distance"] / 3)),
-                text=f"거리 {row['distance']:.3f} (작을수록 유사)",
+                text=t("distance_caption", d=row["distance"]),
             )
 
             current_vote = st.session_state.get(vote_key)
@@ -172,43 +268,55 @@ def render_result_cards(results, source, context, user_id):
                 # 쌓이는 문제가 있었음(2026-08-31 수정).
                 col1, col2, col3 = st.columns([1, 1, 3])
                 with col1:
-                    if st.button("👍 좋아요", key=f"{vote_key}_like"):
+                    if st.button(t("like_button"), key=f"{vote_key}_like"):
                         append_feedback(user_id, source, context, row, "like")
                         st.session_state[vote_key] = "like"
                         st.rerun()
                 with col2:
-                    if st.button("👎 스킵", key=f"{vote_key}_skip"):
+                    if st.button(t("skip_button"), key=f"{vote_key}_skip"):
                         append_feedback(user_id, source, context, row, "skip")
                         st.session_state[vote_key] = "skip"
                         st.rerun()
             else:
-                label = "🙏 좋아요 기록됨" if current_vote == "like" else "🙏 스킵 기록됨"
+                label = t("liked_label") if current_vote == "like" else t("skipped_label")
                 col1, col2 = st.columns([3, 1])
                 with col1:
                     st.caption(label)
                 with col2:
-                    if st.button("변경", key=f"{vote_key}_reset"):
+                    if st.button(t("change_vote_button"), key=f"{vote_key}_reset"):
                         st.session_state[vote_key] = None
                         st.rerun()
 
 
-st.title("🎧 무드 노래 추천")
-st.caption(
-    "stage2 추천 엔진(장르 우선 필터링 + 유클리드 거리)을 그대로 쓰는 웹 버전. "
-    "곡 제목으로 비슷한 곡을 찾거나, 지금 기분을 문장으로 적어서 추천받을 수 있어요."
-)
+with st.sidebar:
+    lang_choice = st.radio(
+        "Language / 언어",
+        options=["ko", "en"],
+        format_func=lambda code: LANG_LABELS[code],
+        index=["ko", "en"].index(st.session_state["lang"]),
+        horizontal=True,
+        key="lang_radio",
+    )
+    st.session_state["lang"] = lang_choice
+    st.divider()
+
+st.title(t("app_title"))
+st.caption(t("app_caption"))
 
 with st.sidebar:
-    st.subheader("👤 사용자")
-    st.caption("비밀번호 없는 가벼운 구분용이에요. 좋아요/스킵을 이 이름으로 기록해요.")
-    nickname = st.text_input("닉네임", value=st.session_state.get("nickname", ""), placeholder="예: 민")
+    st.subheader(t("sidebar_user_header"))
+    st.caption(t("sidebar_user_caption"))
+    nickname = st.text_input(
+        t("nickname_label"),
+        value=st.session_state.get("nickname", ""),
+        placeholder=t("nickname_placeholder"),
+    )
     st.session_state["nickname"] = nickname
     user_id = nickname.strip() or DEFAULT_USER_ID
-    st.caption(f"현재: **{user_id}**")
+    st.caption(t("current_user", user_id=user_id))
     st.divider()
     st.caption(
-        f"{user_id}: {count_feedback(user_id)}개  \n"
-        f"전체 피드백: {count_feedback()}개 (stage4 재랭킹 모델 학습용)"
+        t("feedback_counts", user_id=user_id, mine=count_feedback(user_id), total=count_feedback())
     )
 
     # --- 2026-08-31 추가: 서버에 쌓인 feedback.csv 다운로드 ---
@@ -221,43 +329,43 @@ with st.sidebar:
     # 다운로드 기능을 넣어야 함.)
     new_since_deploy = count_feedback() - get_baseline_feedback_count()
     if new_since_deploy > 0:
-        st.warning(f"🔔 배포 이후 새 피드백 {new_since_deploy}개 - 재부팅 전에 다운로드하세요")
+        st.warning(t("new_feedback_alert", n=new_since_deploy))
     else:
-        st.caption("현재 배포 상태와 동일 (새로 쌓인 피드백 없음)")
+        st.caption(t("no_new_feedback"))
 
     if os.path.exists(FEEDBACK_PATH):
-        with open(FEEDBACK_PATH, "rb") as f:
+        with open(FEEDBACK_PATH, "rb") as fh:
             st.download_button(
-                "⬇️ feedback.csv 다운로드",
-                data=f.read(),
+                t("download_button"),
+                data=fh.read(),
                 file_name="feedback.csv",
                 mime="text/csv",
-                help="지금 서버에 쌓인 전체 피드백을 내려받아요. "
-                     "이 앱이 재부팅되면 여기서 받은 것 외의 기록은 사라져요.",
+                help=t("download_help"),
             )
 
-tab_song, tab_mood = st.tabs(["🎵 곡으로 찾기", "💭 지금 기분으로 찾기"])
+tab_song, tab_mood = st.tabs([t("tab_song"), t("tab_mood")])
 
 with tab_song:
-    st.subheader("좋아하는 곡과 비슷한 곡 찾기")
-    query = st.text_input("곡 제목을 입력해보세요", placeholder="예: bad guy", key="song_query")
+    st.subheader(t("song_subheader"))
+    query = st.text_input(t("song_query_label"), placeholder=t("song_query_placeholder"), key="song_query")
 
     if query:
         candidates = search_titles(query)
         if candidates.empty:
-            st.warning(f"'{query}'와 비슷한 곡을 찾을 수 없어요. 다른 표기로 시도해보세요.")
+            st.warning(t("song_not_found", query=query))
         else:
             options = [
                 f"{r.track_name} — {r.artists} ({r.track_genre})"
                 for r in candidates.itertuples()
             ]
-            choice = st.selectbox("찾는 곡이 있으면 골라주세요", options, key="song_choice")
+            choice = st.selectbox(t("song_choice_label"), options, key="song_choice")
             chosen_row = candidates.iloc[options.index(choice)]
 
-            if st.button("이 곡과 비슷한 곡 추천받기", type="primary"):
+            if st.button(t("song_recommend_button"), type="primary"):
                 rec = load_recommender()
                 results, error, note = rec.recommend(
-                    chosen_row["track_name"], chosen_row["artists"], top_n=10
+                    chosen_row["track_name"], chosen_row["artists"], top_n=10,
+                    lang=st.session_state["lang"],
                 )
                 st.session_state["song_results"] = results
                 st.session_state["song_error"] = error
@@ -276,20 +384,24 @@ with tab_song:
         )
 
 with tab_mood:
-    st.subheader("지금 기분/날씨/걷는 속도로 찾기")
+    st.subheader(t("mood_subheader"))
     text = st.text_input(
-        "지금 상황을 자유롭게 적어보세요",
-        placeholder="예: 오늘 비오고 기분 칙칙해",
+        t("mood_text_label"),
+        placeholder=t("mood_text_placeholder"),
         key="mood_text",
     )
+    if st.session_state["lang"] == "en":
+        st.caption(t("mood_ko_only_hint"))
     artist = st.text_input(
-        "선호하는 가수 (없으면 비워두세요)", placeholder="예: Billie Eilish", key="mood_artist"
+        t("mood_artist_label"), placeholder=t("mood_artist_placeholder"), key="mood_artist"
     )
 
-    if st.button("지금 상황에 어울리는 곡 추천받기", type="primary"):
+    if st.button(t("mood_recommend_button"), type="primary"):
         rec = load_recommender()
-        target, matched = parse_context(text, rec.df)
-        results, note = rec.recommend_by_target(target, top_n=10, artist=artist or None)
+        target, matched = parse_context(text, rec.df, lang=st.session_state["lang"])
+        results, note = rec.recommend_by_target(
+            target, top_n=10, artist=artist or None, lang=st.session_state["lang"]
+        )
 
         st.session_state["mood_results"] = results
         st.session_state["mood_note"] = note
@@ -298,9 +410,9 @@ with tab_mood:
 
     if st.session_state.get("mood_results") is not None:
         if not st.session_state.get("mood_matched"):
-            st.info("인식된 키워드가 없어서 데이터셋 평균값 기준으로 추천했어요.")
+            st.info(t("no_keywords_matched"))
         else:
-            st.write(f"인식된 키워드: {', '.join(st.session_state['mood_matched'])}")
+            st.write(t("matched_keywords", keywords=", ".join(st.session_state["mood_matched"])))
         if st.session_state.get("mood_note"):
             st.info(st.session_state["mood_note"])
         render_result_cards(
