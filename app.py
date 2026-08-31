@@ -187,7 +187,7 @@ with st.sidebar:
     st.caption(f"현재: **{user_id}**")
     st.divider()
     st.caption(
-        f"내 피드백: {count_feedback(user_id)}개  \n"
+        f"{user_id}: {count_feedback(user_id)}개  \n"
         f"전체 피드백: {count_feedback()}개 (stage4 재랭킹 모델 학습용)"
     )
 
