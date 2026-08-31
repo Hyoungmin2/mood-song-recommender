@@ -84,22 +84,44 @@ def search_titles(query, top_n=15):
 
 
 def append_feedback(user_id, source, context, row, label):
-    is_new = not os.path.exists(FEEDBACK_PATH)
-    with open(FEEDBACK_PATH, "a", newline="", encoding="utf-8") as f:
+    """
+    (user_id, source, context, track_name, artists) 조합이 이미 있으면 그
+    이전 기록을 지우고 새로 쓴다(최신 투표로 덮어씀) - 그냥 계속 append만
+    하면 같은 카드에 여러 번 투표할 때(버튼이 안 없어져서 여러 번 눌리는
+    경우, 페이지 새로고침 후 다시 누르는 경우 등) feedback.csv에 중복
+    행이 쌓여서 "내 피드백 개수"가 실제 좋아요/스킵한 곡 수보다 부풀려지는
+    버그가 있었음(2026-08-31, ISSUES.md 참고). 세션 쪽에서도 이미 투표한
+    카드는 버튼을 숨기지만, 새로고침/재실행에도 안전하도록 저장 단에서도
+    한 번 더 막아둠.
+    """
+    new_row = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "user_id": user_id,
+        "source": source,
+        "context": context,
+        "track_name": row["track_name"],
+        "artists": row["artists"],
+        "track_genre": row["track_genre"],
+        "distance": row["distance"],
+        "label": label,
+    }
+
+    existing_rows = []
+    if os.path.exists(FEEDBACK_PATH):
+        with open(FEEDBACK_PATH, newline="", encoding="utf-8") as f:
+            existing_rows = list(csv.DictReader(f))
+
+    key = (user_id, source, context, row["track_name"], row["artists"])
+    existing_rows = [
+        r for r in existing_rows
+        if (r["user_id"], r["source"], r["context"], r["track_name"], r["artists"]) != key
+    ]
+    existing_rows.append(new_row)
+
+    with open(FEEDBACK_PATH, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=FEEDBACK_FIELDS)
-        if is_new:
-            writer.writeheader()
-        writer.writerow({
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-            "user_id": user_id,
-            "source": source,
-            "context": context,
-            "track_name": row["track_name"],
-            "artists": row["artists"],
-            "track_genre": row["track_genre"],
-            "distance": row["distance"],
-            "label": label,
-        })
+        writer.writeheader()
+        writer.writerows(existing_rows)
 
 
 def count_feedback(user_id=None):
@@ -124,22 +146,30 @@ def render_result_cards(results, source, context, user_id):
             )
 
             current_vote = st.session_state.get(vote_key)
-            col1, col2, col3 = st.columns([1, 1, 3])
-            with col1:
-                if st.button("👍 좋아요", key=f"{vote_key}_like"):
-                    append_feedback(user_id, source, context, row, "like")
-                    st.session_state[vote_key] = "like"
-                    st.rerun()
-            with col2:
-                if st.button("👎 스킵", key=f"{vote_key}_skip"):
-                    append_feedback(user_id, source, context, row, "skip")
-                    st.session_state[vote_key] = "skip"
-                    st.rerun()
-            with col3:
-                if current_vote == "like":
-                    st.caption("🙏 좋아요 기록됨")
-                elif current_vote == "skip":
-                    st.caption("🙏 스킵 기록됨")
+            if current_vote is None:
+                # 아직 투표 안 한 카드만 버튼을 보여줌 - 투표 후에도 버튼이
+                # 계속 남아있으면 다시 눌러서 feedback.csv에 중복 행이
+                # 쌓이는 문제가 있었음(2026-08-31 수정).
+                col1, col2, col3 = st.columns([1, 1, 3])
+                with col1:
+                    if st.button("👍 좋아요", key=f"{vote_key}_like"):
+                        append_feedback(user_id, source, context, row, "like")
+                        st.session_state[vote_key] = "like"
+                        st.rerun()
+                with col2:
+                    if st.button("👎 스킵", key=f"{vote_key}_skip"):
+                        append_feedback(user_id, source, context, row, "skip")
+                        st.session_state[vote_key] = "skip"
+                        st.rerun()
+            else:
+                label = "🙏 좋아요 기록됨" if current_vote == "like" else "🙏 스킵 기록됨"
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    st.caption(label)
+                with col2:
+                    if st.button("변경", key=f"{vote_key}_reset"):
+                        st.session_state[vote_key] = None
+                        st.rerun()
 
 
 st.title("🎧 무드 노래 추천")
