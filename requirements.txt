@@ -5,4 +5,9 @@ python-dotenv>=1.0.0
 numpy>=1.24.0
 streamlit>=1.32.0
 
-# stage4-2 임베딩 매칭(선택, 무거움)은 requirements-embedding.txt 참고
+# stage4-2 임베딩 매칭(sentence-transformers, torch 포함) - Streamlit Community
+# Cloud는 requirements.txt 하나만 읽으므로(다른 파일명은 인식 안 함), 배포 시에도
+# 임베딩 기능이 같이 설치되도록 여기서 포함시킴. 로컬에서 pip install -r
+# requirements.txt를 하면 이제 이 무거운 의존성도 같이 받게 됨 - 가볍게만
+# 쓰고 싶으면 이 줄을 지우면 됨(그러면 규칙 기반 매칭만 동작, 자동 폴백).
+-r requirements-embedding.txt

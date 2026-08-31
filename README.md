@@ -60,22 +60,26 @@ python3 build_dataset.py
 
 를 실행하면 `data/stage2_dataset.csv`(정제된 데이터셋)가 생성된다.
 
-### 2. 핵심 의존성 설치
+### 2. 의존성 설치
 
 ```
 pip3 install -r requirements.txt
 ```
 
-### 3. (선택) 임베딩 기반 의미 매칭 활성화
+`requirements.txt`는 임베딩 기반 의미 매칭용 의존성(`sentence-transformers`,
+torch 포함)까지 같이 설치한다 - Streamlit Community Cloud가 이 파일 하나만
+읽기 때문에, 배포 환경에서도 임베딩 기능이 그대로 동작하게 하려고 이렇게
+구성했다. 가볍게만 쓰고 싶으면 `requirements.txt` 맨 아래
+`-r requirements-embedding.txt` 줄을 지우면 된다 (그러면 규칙 기반 키워드
+매칭만 동작, 자동 폴백).
+
+설치 후 임베딩 threshold를 재검증하고 싶으면:
 
 ```
-pip3 install -r requirements-embedding.txt
-python3 calibrate_embedding_threshold.py   # threshold 검증(선택)
+python3 calibrate_embedding_threshold.py
 ```
 
-설치 안 해도 앱은 정상 동작한다 (규칙 기반 키워드 매칭만 사용, 자동 폴백).
-
-### 4. 실행
+### 3. 실행
 
 ```
 streamlit run app.py
