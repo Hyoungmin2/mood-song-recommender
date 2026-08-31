@@ -134,16 +134,24 @@ def count_feedback(user_id=None):
     return len(df)
 
 
-@st.cache_resource
+_baseline_feedback_count = None
+
+
 def get_baseline_feedback_count():
     """
     이번 배포(재부팅) 시점에 feedback.csv에 있던 행 수를 딱 한 번만 계산해서
-    고정해둠. st.cache_resource는 프로세스가 재부팅되기 전까지 값을 유지하니까,
-    "배포 시점 스냅샷"을 표시하는 용도로 정확히 들어맞음. 이걸 현재
-    count_feedback()과 비교하면 "이번 배포 이후 새로 쌓인 피드백 개수"를
-    알 수 있음 - 다운로드 버튼을 눌러야 하는지 판단하는 기준으로 씀.
+    고정해둠. 처음엔 st.cache_resource로 구현했는데, 그건 앱 화면의
+    "Clear cache" 메뉴/단축키(C)로 누구나 지울 수 있는 캐시라서 - 방문자가
+    실수로 그걸 누르면 기준값이 그 순간으로 재설정되면서 실제로는 새
+    피드백이 있는데도 "없음"으로 잘못 표시되는 문제가 있었음. 그래서
+    Streamlit 캐시 시스템 밖에 있는 일반 모듈 전역 변수로 바꿈 - 이건
+    Clear cache로는 안 지워지고, 앱이 실제로 재부팅(프로세스 재시작)될
+    때만 초기화됨.
     """
-    return count_feedback()
+    global _baseline_feedback_count
+    if _baseline_feedback_count is None:
+        _baseline_feedback_count = count_feedback()
+    return _baseline_feedback_count
 
 
 def render_result_cards(results, source, context, user_id):
