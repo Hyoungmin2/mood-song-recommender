@@ -869,3 +869,17 @@ push로 인한 재배포, 리소스 초과 강제 재시작) `feedback.csv`에 �
 전역 변수(`_baseline_feedback_count`)로 교체. 이건 Clear cache로는
 안 지워지고, 앱 프로세스가 실제로 재시작(진짜 재부팅)될 때만
 초기화됨 - "배포 시점 스냅샷"이라는 원래 의도에 더 정확히 맞음.
+
+## 피드백 다운로드/병합을 직접 할 수 있도록 스크립트 추가 (2026-08-31)
+
+배포된 앱에서 받은 feedback.csv를 매번 수동으로 병합하지 않아도 되게
+`merge_feedback.py`를 추가함. `(user_id, source, context, track_name,
+artists)` 기준으로 로컬 파일과 병합하는데, 이건 `app.py`의
+`append_feedback()`이 쓰는 것과 동일한 키라 일관됨. 사용법:
+
+```
+python3 merge_feedback.py <다운로드한 feedback.csv 경로>
+```
+
+실제 다운로드한 서버 데이터(2026-08-31, guest가 "시원하고 기분 좋은
+상태"로 테스트한 1개 기록)로 병합 및 스크립트 자체 정상 동작 확인함.
