@@ -27,13 +27,12 @@
   (`f4e5ac5`, 14개 파일) -> https://github.com/Hyoungmin2/mood-song-recommender
   로 push. `feedback.csv`는 의도적으로 커밋에 포함(프로젝트 자체 학습
   데이터라 계속 추적할 계획).
-- **Streamlit Cloud 배포**: 1차 시도(2026-08-31)에서 앱은 뜨는데 상황 텍스트
-  추천 실행 시 `FileNotFoundError` 발생 - 원인은 `.gitignore`의
-  `data/*.csv`가 앱이 실제로 읽는 가공 데이터셋(`data/stage2_dataset.csv`)
-  까지 같이 빼버려서 GitHub 저장소에 그 파일이 없었던 것. `!data/stage2_dataset.csv`
-  예외 규칙 추가해서 해당 파일만 추적하도록 수정, 커밋 `3b845c6`. 원본
-  Kaggle 다운로드 파일(`spotify_tracks_dataset.csv`)은 계속 제외 유지.
-  push 및 재배포 확인 필요 (다음 단계).
+- **Streamlit Cloud 배포**: 완료 (2026-08-31). 1차 시도에서 `FileNotFoundError`
+  발생(`.gitignore`의 `data/*.csv`가 앱이 실제로 읽는 가공 데이터셋까지
+  같이 제외시킨 게 원인) - `!data/stage2_dataset.csv` 예외 규칙으로 수정
+  (커밋 `3b845c6`). push 후 재배포 확인 결과 상황 텍스트 추천도 정상
+  동작하고, 임베딩 기반 의미 매칭("의미유사" 문구)까지 클라우드에서
+  정상 작동 확인함. stage4-2 + 배포 모두 End-to-End 완료.
 
 ## stage3: Streamlit 앱 (app.py) 첫 버전 (2026-08-22)
 
@@ -792,8 +791,11 @@ BSD 라이선스 원본 기반이라 재배포에 문제없음). 원본 다운�
 필요하고 앱 실행에는 불필요)은 계속 `.gitignore`로 제외 유지. 커밋
 `3b845c6`.
 
-### 재검증 필요
+### 재검증 결과 (2026-08-31)
 
-수정 커밋을 push하고 Streamlit Cloud가 재배포한 뒤, "지금 기분으로
-찾기" 탭이 정상 동작하는지, 그리고 임베딩 기반 의미 매칭
-("의미유사" 문구)까지 클라우드 환경에서 실제로 작동하는지 확인 필요.
+push 후 Streamlit Cloud 재배포 확인. "지금 기분으로 찾기" 탭에서
+"장맛비라 꿀꿀하다" 입력 시 에러 없이 정상 동작하고, "인식된 키워드:
+비, 장마(의미유사 0.47, 예문:'장마철이라 계속 비만 와서 우중충해')"
+문구까지 그대로 떠서 임베딩 기반 의미 매칭도 클라우드 환경에서 정상
+작동함을 확인함. stage4-2 End-to-End 검증이 로컬뿐 아니라 실제 배포
+환경에서도 완료됨.
