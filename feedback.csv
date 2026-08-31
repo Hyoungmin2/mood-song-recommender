@@ -1,0 +1,10 @@
+timestamp,user_id,source,context,track_name,artists,track_genre,distance,label
+2026-08-31T03:54:28.541707+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,ocean eyes,Billie Eilish,electro,1.687901781049924,like
+2026-08-31T03:55:17.058824+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,Training Wheels,Melanie Martinez,electro,1.1256073615018998,like
+2026-08-31T03:56:43.762226+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,Tongue,Maribou State;Holly Walker,electro,1.1913248760951192,skip
+2026-08-31T03:57:17.882229+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,Until I Found You,Stephen Sanchez,pop,1.3417855056545587,like
+2026-08-31T03:58:48.254367+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,drivers license,Olivia Rodrigo,pop,1.3458222981175931,like
+2026-08-31T03:59:26.491804+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,Ik Lamha,Azaan Sami Khan,pop,1.406538317238485,skip
+2026-08-31T03:59:49.305599+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,Munbe Vaa,Joshua Aaron,pop,1.4469193059321501,skip
+2026-08-31T04:01:18.779299+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,Control,Halsey,electro,1.4482693276782,skip
+2026-08-31T04:04:59.501164+00:00,형민,mood,mood:장맛비라 꿀꿀하다|artist:billie eilish,Moral of the Story,Ashe,electro,1.4633889980481256,like

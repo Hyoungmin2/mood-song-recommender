@@ -1,0 +1,10 @@
+# stage4-2: context_parser.py의 임베딩 기반 의미 매칭용 (선택 사항).
+# 안 깔아도 앱은 정상 동작함(규칙 기반 substring 매칭만 사용, 자동 폴백).
+# torch를 같이 설치하는 무거운 의존성이라 별도 파일로 분리함.
+#
+# 설치 (실제 Mac 터미널에서 직접):
+#   pip3 install -r requirements-embedding.txt
+#
+# 설치 후 calibrate_embedding_threshold.py를 한 번 실행해서
+# context_parser.py의 EMBEDDING_SIMILARITY_THRESHOLD 값을 검증/조정하세요.
+sentence-transformers>=3.0.0
