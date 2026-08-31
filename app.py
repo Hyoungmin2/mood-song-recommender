@@ -134,6 +134,18 @@ def count_feedback(user_id=None):
     return len(df)
 
 
+@st.cache_resource
+def get_baseline_feedback_count():
+    """
+    이번 배포(재부팅) 시점에 feedback.csv에 있던 행 수를 딱 한 번만 계산해서
+    고정해둠. st.cache_resource는 프로세스가 재부팅되기 전까지 값을 유지하니까,
+    "배포 시점 스냅샷"을 표시하는 용도로 정확히 들어맞음. 이걸 현재
+    count_feedback()과 비교하면 "이번 배포 이후 새로 쌓인 피드백 개수"를
+    알 수 있음 - 다운로드 버튼을 눌러야 하는지 판단하는 기준으로 씀.
+    """
+    return count_feedback()
+
+
 def render_result_cards(results, source, context, user_id):
     for i, row in results.iterrows():
         vote_key = f"vote_{source}_{i}_{row['track_name']}_{row['artists']}"
@@ -199,6 +211,12 @@ with st.sidebar:
     # 이 버튼으로 다운로드해서 로컬 feedback.csv와 합친 뒤 git commit/push
     # 해야 함. (서버에 SSH/파일탐색기로 직접 접근할 방법이 없어서 앱 자체에
     # 다운로드 기능을 넣어야 함.)
+    new_since_deploy = count_feedback() - get_baseline_feedback_count()
+    if new_since_deploy > 0:
+        st.warning(f"🔔 배포 이후 새 피드백 {new_since_deploy}개 - 재부팅 전에 다운로드하세요")
+    else:
+        st.caption("현재 배포 상태와 동일 (새로 쌓인 피드백 없음)")
+
     if os.path.exists(FEEDBACK_PATH):
         with open(FEEDBACK_PATH, "rb") as f:
             st.download_button(
