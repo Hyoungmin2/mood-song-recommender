@@ -120,8 +120,12 @@ T = {
               "embeddings) is built for Korean text. Type your mood in Korean (like the "
               "placeholder above) to see it match as intended.",
     },
-    "mood_artist_label": {"ko": "선호하는 가수 (없으면 비워두세요)", "en": "Preferred artist (leave blank if none)"},
+    "mood_artist_label": {"ko": "선호하는 가수 (필수)", "en": "Preferred artist (required)"},
     "mood_artist_placeholder": {"ko": "예: Billie Eilish", "en": "e.g. Billie Eilish"},
+    "mood_artist_required_error": {
+        "ko": "선호하는 가수를 입력해주세요 - 없으면 추천 결과가 너무 다양한 장르로 흩어져요.",
+        "en": "Please enter a preferred artist - without one, results can end up scattered across too many unrelated genres.",
+    },
     "mood_recommend_button": {"ko": "지금 상황에 어울리는 곡 추천받기", "en": "Recommend songs for this mood"},
     "no_keywords_matched": {
         "ko": "인식된 키워드가 없어서 데이터셋 평균값 기준으로 추천했어요.",
@@ -397,16 +401,25 @@ with tab_mood:
     )
 
     if st.button(t("mood_recommend_button"), type="primary"):
-        rec = load_recommender()
-        target, matched = parse_context(text, rec.df, lang=st.session_state["lang"])
-        results, note = rec.recommend_by_target(
-            target, top_n=10, artist=artist or None, lang=st.session_state["lang"]
-        )
+        if not artist.strip():
+            # 2026-08-31 추가: 아티스트 없이 무드만으로 추천하면 MOOD_GENRES
+            # 화이트리스트(약 50개 장르) 전체에서 찾다 보니 장르가 너무
+            # 넓게 흩어져서 "이상한 곡"이 자주 나온다는 피드백이 있었음.
+            # recommend_by_target()이 artist가 주어지면 그 아티스트의
+            # 장르로 후보를 먼저 좁히는 로직이 이미 있어서, 아티스트를
+            # 필수 입력으로 강제하면 그 좁히기 로직이 항상 작동함.
+            st.warning(t("mood_artist_required_error"))
+        else:
+            rec = load_recommender()
+            target, matched = parse_context(text, rec.df, lang=st.session_state["lang"])
+            results, note = rec.recommend_by_target(
+                target, top_n=10, artist=artist, lang=st.session_state["lang"]
+            )
 
-        st.session_state["mood_results"] = results
-        st.session_state["mood_note"] = note
-        st.session_state["mood_matched"] = matched
-        st.session_state["mood_context"] = f"mood:{text}|artist:{artist or ''}"
+            st.session_state["mood_results"] = results
+            st.session_state["mood_note"] = note
+            st.session_state["mood_matched"] = matched
+            st.session_state["mood_context"] = f"mood:{text}|artist:{artist}"
 
     if st.session_state.get("mood_results") is not None:
         if not st.session_state.get("mood_matched"):
