@@ -14,3 +14,46 @@ timestamp,user_id,source,context,track_name,artists,track_genre,distance,label
 2026-08-31T04:22:28.049220+00:00,형민,mood,mood:바름 부는 날씨이고 감성있는 곡|artist:Justin bieber,2U (feat. Justin Bieber),David Guetta;Justin Bieber,edm,1.3850768272148355,like
 2026-08-31T04:30:43.933992+00:00,형민,mood,mood:바람 부는 날씨이고 감성있는 곡|artist:Justin bieber,2U (feat. Justin Bieber),David Guetta;Justin Bieber,edm,1.3850768272148355,like
 2026-08-31T05:06:30.554290+00:00,guest,mood,mood:시원하고 기분 좋은 상태 |artist:,Passion,RAC;Louis The Child,alt-rock,0.8297460828805171,skip
+2026-08-31T05:20:44.519038+00:00,형민,mood,mood:시원한 바람이 불어|artist:,I Think We're Alone Now,The Rubinoos,power-pop,0.8695384240776998,skip
+2026-08-31T05:22:03.898273+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Kalmalısın,Barış Kocatürk,singer-songwriter,0.9341813334333734,skip
+2026-08-31T05:24:07.556366+00:00,형민,mood,mood:시원한 바람이 불어|artist:,I Guess That's Why They Call It The Blues,Elton John,piano,0.987831043747261,skip
+2026-08-31T05:24:51.366656+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Çökertme,Cem Karaca,psych-rock,1.0105325349228553,skip
+2026-08-31T05:24:52.369055+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Shubhaarambh,Amit Trivedi;Shruti Pathak;Divya Kumar,pop-film,1.0245028449760887,skip
+2026-08-31T05:24:58.264984+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Xanadu,Olivia Newton-John,disco,1.0562738784557502,skip
+2026-08-31T05:25:03.266933+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Sysselmannen,Lars Winnerbäck,singer-songwriter,1.0607160627754908,skip
+2026-08-31T05:25:10.173822+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Man in the Rain,Mike Oldfield,new-age,0.9977453448267136,skip
+2026-08-31T05:25:32.528021+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Save a Prayer - 2009 Remaster,Duran Duran,synth-pop,1.005231880691498,skip
+2026-08-31T05:27:29.234701+00:00,형민,mood,mood:시원한 바람이 불어|artist:,Lose Control,MEDUZA;Becky Hill;Goodboys,dance,1.0342057770681574,skip
+2026-08-31T05:30:36.166493+00:00,형민,mood,mood:시원해|artist:lauv,"fuck, i'm lonely (with Anne-Marie)",Lauv;Anne-Marie,electro,2.1002247763368125,like
+2026-08-31T05:36:52.781249+00:00,형민,mood,mood:시원한 날씨|artist:lauv,A Different Way (with Lauv),DJ Snake;Lauv,edm,1.5320151691553252,like
+2026-08-31T05:41:42.916270+00:00,gudals,mood,mood:시원한 바람 |artist:lauv,if I were u (with Lauv),blackbear;Lauv,electro,2.15082573098542,like
+2026-08-31T05:51:59.533783+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,2U (feat. Justin Bieber),David Guetta;Justin Bieber,edm,1.5792270638908066,like
+2026-08-31T05:52:57.079067+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,Mai Ni Meriye,Lost Stories;Jonita Gandhi;Ashwin Adwani,edm,1.2350969231263766,skip
+2026-08-31T05:54:08.056150+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,Emannavoo,Anirudh Ravichander;Shweta Mohan,hip-hop,1.272747302902633,skip
+2026-08-31T05:54:09.875195+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,Nee Paartha Vizhigal - The Touch of Love,Anirudh Ravichander;Vijay Yesudas;Shweta Mohan,hip-hop,1.277247831100598,skip
+2026-08-31T05:55:04.976892+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,Take It Easy - 2013 Remaster,Eagles,country,1.2911880840501802,skip
+2026-08-31T05:55:24.869741+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,The Mood,Timaya,dancehall,1.3347538204586462,skip
+2026-08-31T05:57:38.730331+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,Kannuladha - The Kiss of Love,Anirudh Ravichander;Dhanush;Shruti Haasan,hip-hop,1.403633255926368,skip
+2026-08-31T05:58:58.816915+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,Make You Say,Zedd;Maren Morris;BEAUZ,edm,1.3520681172408433,like
+2026-08-31T06:01:12.059122+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,New Kid in Town - 2013 Remaster,Eagles,country,1.39994447068858,like
+2026-08-31T06:01:56.597948+00:00,guest,mood,mood:시원한 바람|artist:Justin bieber,Jolene,Dolly Parton,country,1.40251164761356,skip
+2026-08-31T06:03:10.552350+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,2U (feat. Justin Bieber),David Guetta;Justin Bieber,edm,1.5792270638908066,like
+2026-08-31T06:03:11.989835+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,Mai Ni Meriye,Lost Stories;Jonita Gandhi;Ashwin Adwani,edm,1.2350969231263766,skip
+2026-08-31T06:03:13.276094+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,Emannavoo,Anirudh Ravichander;Shweta Mohan,hip-hop,1.272747302902633,skip
+2026-08-31T06:03:15.148008+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,Nee Paartha Vizhigal - The Touch of Love,Anirudh Ravichander;Vijay Yesudas;Shweta Mohan,hip-hop,1.277247831100598,skip
+2026-08-31T06:03:16.782154+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,Take It Easy - 2013 Remaster,Eagles,country,1.2911880840501802,like
+2026-08-31T06:03:19.636514+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,The Mood,Timaya,dancehall,1.3347538204586462,skip
+2026-08-31T06:03:20.638874+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,Make You Say,Zedd;Maren Morris;BEAUZ,edm,1.3520681172408433,like
+2026-08-31T06:03:22.383622+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,New Kid in Town - 2013 Remaster,Eagles,country,1.39994447068858,skip
+2026-08-31T06:03:23.945273+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,Jolene,Dolly Parton,country,1.40251164761356,skip
+2026-08-31T06:03:24.718070+00:00,형민,mood,mood:시원한 바람|artist:Justin bieber,Kannuladha - The Kiss of Love,Anirudh Ravichander;Dhanush;Shruti Haasan,hip-hop,1.403633255926368,skip
+2026-08-31T06:04:49.871353+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,my future,Billie Eilish,electro,1.4757049171811827,like
+2026-08-31T06:08:52.654019+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Out Of Love,Alessia Cara,electro,1.1551307076279294,like
+2026-08-31T06:10:26.872165+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,you broke me first,Tate McRae,pop,1.2628040592294687,like
+2026-08-31T06:11:43.175472+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Chupana Bhi Nahi Aata - Recreated Version,Stebin Ben,pop,1.4038365258617944,skip
+2026-08-31T06:12:40.090035+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Too Sad To Cry,Sasha Alex Sloan,electro,1.421305637299297,like
+2026-08-31T06:13:31.760349+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Moral of the Story (feat. Niall Horan) - Bonus Track,Ashe;Niall Horan,electro,1.452560918316306,like
+2026-08-31T06:13:56.876211+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Training Wheels,Melanie Martinez,electro,1.4736307824326769,like
+2026-08-31T06:14:04.698712+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Moral of the Story (feat. Niall Horan),Ashe;Niall Horan,electro,1.484252975186422,like
+2026-08-31T06:14:56.717714+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,drivers license,Olivia Rodrigo,pop,1.4866466243719423,like
+2026-08-31T06:17:39.979391+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Runaway,AURORA,pop,1.48940019021025,like
