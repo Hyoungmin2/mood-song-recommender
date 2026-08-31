@@ -21,6 +21,16 @@ min이 로컬에서 돌려본 결과 완전 무관한 문장도 "신나"와 유�
 `jhgan/ko-sroberta-multitask`로 교체함. 이 버전으로 다시 로컬에서 돌려서
 결과 확인 필요 (첫 실행 시 새 모델을 다시 다운로드하므로 시간 걸림).
 
+--- 2026-08-31 수정 3 ---
+"시원한 바람이 불어"를 "바람"/"시원" 키워드로 등록해서 1단계에서 정확히
+잡히게 고쳤는데도(ISSUES.md 참고), 배포된 앱에서 재확인해보니 여전히
+"맑음"과도 유사도 0.55로 같이 걸림. 기존 TEST_CASES는 "이 문장이 아무
+개념과도 안 걸려야 하는지"만 체크해서, "A 문장이 자기 개념(바람)은
+맞게 잡히면서 동시에 전혀 다른 개념(맑음)과도 잘못 겹쳐 걸리는" 경우를
+못 잡아냈음. 그래서 CROSS_CONTAMINATION_CASES를 추가함 - 문장별로
+"정답 개념"과 "절대 안 걸려야 하는 다른 개념"을 짝지어서, 그 다른
+개념과의 유사도가 threshold를 넘는지 직접 확인함.
+
 실행 전 준비 (이미 했으면 생략):
     cd stage2
     pip3 install -r requirements-embedding.txt
@@ -28,7 +38,7 @@ min이 로컬에서 돌려본 결과 완전 무관한 문장도 "신나"와 유�
 실행:
     python3 calibrate_embedding_threshold.py
 """
-from context_parser import _build_concept_groups, _get_embedder
+from context_parser import _build_concept_groups, _get_embedder, EMBEDDING_SIMILARITY_THRESHOLD
 
 # 사전에 있는 표현이 "그대로" 들어있지 않은 paraphrase 테스트 문장들.
 # (기대하는 개념, 문장) 쌍 - 기대값은 사람이 미리 판단한 정답(육안 검수용).
@@ -40,9 +50,24 @@ TEST_CASES = [
     ("맑음/화창 계열", "하늘이 완전 쨍하고 좋다"),
     ("조깅/뛰면서 계열", "지금 헬스장에서 러닝머신 뛰는 중"),
     ("산책/여유 계열", "천천히 동네 한 바퀴 걷는 중"),
+    ("바람/시원 계열", "선선한 바람이 불어서 좋아"),
     ("관련 없음(매칭 안 되길 기대) 1", "오늘 저녁 뭐 먹을지 고민중이야"),
     ("관련 없음(매칭 안 되길 기대) 2", "내일 회의 몇 시였지?"),
     ("관련 없음(매칭 안 되길 기대) 3", "이 코드 왜 안 돌아가지"),
+]
+
+# 2026-08-31 추가: "1단계에서 이미 정확히 잡히는 개념(예: 바람/시원)의
+# 문장이, 전혀 다른 개념(예: 맑음)의 예문과도 threshold를 넘겨버리는"
+# 교차 오매칭 케이스 발견(ISSUES.md 참고 - "시원한 바람이 불어"가
+# "맑음"과 유사도 0.53~0.55로 매칭됨). 기존 TEST_CASES는 "이 문장이
+# 아무 개념과도 안 걸려야 하는지"만 봐서 이런 "A 개념 문장이 B 개념과도
+# 겹쳐서 걸리는" 경우를 못 잡았음. 아래는 "정답 개념"과 "절대 안 걸려야
+# 하는 다른 개념"을 짝지어서, 그 특정 개념과의 유사도가 threshold를
+# 넘는지 직접 확인하는 별도 체크.
+CROSS_CONTAMINATION_CASES = [
+    # (문장, 정답으로 기대하는 개념 대표 키워드, 걸리면 안 되는 개념 대표 키워드)
+    ("선선한 바람이 불어서 좋아", "바람", "맑음"),
+    ("시원한 바람이 불어", "바람", "맑음"),
 ]
 
 
@@ -87,6 +112,25 @@ def main():
         print(
             "-> 겹치는 구간이 있어서 완벽하게 나눌 수 있는 threshold가 없음.\n"
             "   개별 [카테고리]별 결과를 보고 직접 판단해서 조정하세요."
+        )
+
+    print("\n--- 교차 오매칭 체크 (한 문장이 엉뚱한 다른 개념과도 걸리는지) ---")
+    print(f"현재 threshold: {EMBEDDING_SIMILARITY_THRESHOLD}\n")
+    group_by_keyword = {}
+    for keywords, _, examples in groups:
+        for kw in keywords:
+            group_by_keyword[kw] = (keywords, examples)
+
+    for text, correct_kw, must_not_match_kw in CROSS_CONTAMINATION_CASES:
+        text_emb = embedder.encode(text, convert_to_tensor=True)
+        _, bad_examples = group_by_keyword[must_not_match_kw]
+        bad_sims = util.cos_sim(text_emb, embedder.encode(bad_examples, convert_to_tensor=True))[0]
+        bad_best_idx = int(bad_sims.argmax())
+        bad_sim = float(bad_sims[bad_best_idx])
+        flag = "⚠️ 여전히 오매칭됨" if bad_sim >= EMBEDDING_SIMILARITY_THRESHOLD else "✅ 안 걸림"
+        print(
+            f'"{text}" (정답: {correct_kw}) vs 걸리면 안 되는 "{must_not_match_kw}": '
+            f"유사도 {bad_sim:.3f}  {flag}"
         )
 
 
