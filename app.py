@@ -191,6 +191,25 @@ with st.sidebar:
         f"전체 피드백: {count_feedback()}개 (stage4 재랭킹 모델 학습용)"
     )
 
+    # --- 2026-08-31 추가: 서버에 쌓인 feedback.csv 다운로드 ---
+    # Streamlit Cloud의 로컬 파일시스템은 임시(ephemeral)라 앱이 재부팅되면
+    # (12시간 무접속 sleep, 재배포, 리소스 초과 재시작 등) feedback.csv에
+    # append된 내용이 사라짐. git에 커밋된 스냅샷만 다음 배포에 남음.
+    # 배포된 앱에서 실제로 쌓인 피드백을 영구 보관하려면, 사라지기 전에
+    # 이 버튼으로 다운로드해서 로컬 feedback.csv와 합친 뒤 git commit/push
+    # 해야 함. (서버에 SSH/파일탐색기로 직접 접근할 방법이 없어서 앱 자체에
+    # 다운로드 기능을 넣어야 함.)
+    if os.path.exists(FEEDBACK_PATH):
+        with open(FEEDBACK_PATH, "rb") as f:
+            st.download_button(
+                "⬇️ feedback.csv 다운로드",
+                data=f.read(),
+                file_name="feedback.csv",
+                mime="text/csv",
+                help="지금 서버에 쌓인 전체 피드백을 내려받아요. "
+                     "이 앱이 재부팅되면 여기서 받은 것 외의 기록은 사라져요.",
+            )
+
 tab_song, tab_mood = st.tabs(["🎵 곡으로 찾기", "💭 지금 기분으로 찾기"])
 
 with tab_song:
