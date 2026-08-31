@@ -253,13 +253,25 @@ def parse_context(text, df, use_embedding=True, lang="ko"):
     matched = []
     matched_raw_keywords = set()
 
-    # 1단계: 기존 substring 매칭 (변경 없음 - 회귀 방지)
+    # 1단계: 기존 substring 매칭
+    # 2026-08-31 수정: "바람"/"시원"처럼 delta가 완전히 같은 동의어
+    # 키워드 두 개가 한 문장에 동시에 등장하면(예: "시원한 바람이 불어")
+    # 델타가 중복으로 두 번 더해지는 문제를 발견함(ISSUES.md 참고).
+    # 2단계(임베딩)는 처음부터 _build_concept_groups()로 동의어를 묶어서
+    # 델타를 1번만 적용했는데, 1단계는 그런 보호 장치가 없었음. 표시용
+    # matched 리스트에는 실제로 매칭된 키워드를 그대로 다 보여주되(둘 다
+    # 문장에 있었다는 사실 자체는 유효한 정보라 유지함), 델타 적용은
+    # 같은 개념(동일 delta dict)당 한 번만 하도록 고침.
+    applied_concept_keys = set()
     for keyword, adjustments in KEYWORD_RULES.items():
         if keyword in text:
             matched.append(keyword)
             matched_raw_keywords.add(keyword)
-            for feature, delta in adjustments.items():
-                target[feature] = target.get(feature, 0) + delta
+            concept_key = tuple(sorted(adjustments.items()))
+            if concept_key not in applied_concept_keys:
+                applied_concept_keys.add(concept_key)
+                for feature, delta in adjustments.items():
+                    target[feature] = target.get(feature, 0) + delta
 
     # 2단계: 임베딩 의미 매칭 (선택적, 라이브러리 없으면 자동 스킵)
     if use_embedding:
