@@ -96,6 +96,13 @@ KEYWORD_RULES = {
     # 직접 등록하면 애매한 임베딩 추측에 기대지 않고 정확히 잡을 수 있음.
     "바람": {"valence": +0.15, "acousticness": +0.1, "energy": -0.1},
     "시원": {"valence": +0.15, "acousticness": +0.1, "energy": -0.1},
+
+    # 2026-08-31 추가: "신비로운 느낌" 요청 - "신비"는 substring 매칭이라
+    # "신비로운"/"신비롭다"/"신비스러운" 전부 이 한 항목으로 커버됨(다른
+    # 표기를 따로 안 추가해도 됨). 신비로운 분위기는 밝고 들뜬 느낌보다는
+    # 차분하고 몽환적인 쪽이라 valence/energy는 낮추고, 보컬 위주보다
+    # 분위기/악기 중심인 경우가 많다고 보고 instrumentalness는 올림.
+    "신비": {"valence": -0.15, "energy": -0.15, "instrumentalness": +0.2},
 }
 
 # 개념(동의어 그룹)별 자연스러운 예문. 임베딩 비교는 키워드 원문이 아니라
@@ -121,6 +128,7 @@ CONCEPT_EXAMPLE_SENTENCES = {
     "흐림": ["날씨가 흐려", "하늘이 잔뜩 흐리다"],
     "구름": ["하늘에 구름이 잔뜩 꼈어"],
     "바람": ["선선한 바람이 불어와", "바람이 산들산들 불어서 기분 좋아", "시원한 바람 덕분에 상쾌해"],
+    "신비": ["신비로운 분위기가 좋아", "뭔가 신비로운 느낌이 나는 음악이 좋아", "신비스러운 느낌 물씬 나는 곡 듣고 싶어"],
 }
 
 # 문장이 이 유사도 이상이면 "의미적으로 비슷하다"고 판단.
@@ -262,16 +270,29 @@ def parse_context(text, df, use_embedding=True, lang="ko"):
     # matched 리스트에는 실제로 매칭된 키워드를 그대로 다 보여주되(둘 다
     # 문장에 있었다는 사실 자체는 유효한 정보라 유지함), 델타 적용은
     # 같은 개념(동일 delta dict)당 한 번만 하도록 고침.
+    # 2026-08-31 추가: "신비"를 새로 등록했더니 "신비"라는 글자 안에 이미
+    # 등록돼있던 "비"(비/장마 계열)가 substring으로 우연히 포함돼 있어서,
+    # "신비로운 느낌" 같은 문장에서 "비"(비 온다는 의미)까지 같이 잘못
+    # 매칭되는 문제를 발견함(ISSUES.md 참고). 먼저 문장에 등장하는 키워드를
+    # 전부 모은 뒤, 다른 매칭된 키워드에 완전히 포함되는(더 짧은) 키워드는
+    # 제외하고 더 길고 구체적인 키워드만 남김 - "신비"가 매칭됐으면 그 안에
+    # 포함된 "비"는 별도로 세지 않음.
+    raw_matches = [keyword for keyword in KEYWORD_RULES if keyword in text]
+    filtered_matches = [
+        keyword for keyword in raw_matches
+        if not any(keyword != other and keyword in other for other in raw_matches)
+    ]
+
     applied_concept_keys = set()
-    for keyword, adjustments in KEYWORD_RULES.items():
-        if keyword in text:
-            matched.append(keyword)
-            matched_raw_keywords.add(keyword)
-            concept_key = tuple(sorted(adjustments.items()))
-            if concept_key not in applied_concept_keys:
-                applied_concept_keys.add(concept_key)
-                for feature, delta in adjustments.items():
-                    target[feature] = target.get(feature, 0) + delta
+    for keyword in filtered_matches:
+        adjustments = KEYWORD_RULES[keyword]
+        matched.append(keyword)
+        matched_raw_keywords.add(keyword)
+        concept_key = tuple(sorted(adjustments.items()))
+        if concept_key not in applied_concept_keys:
+            applied_concept_keys.add(concept_key)
+            for feature, delta in adjustments.items():
+                target[feature] = target.get(feature, 0) + delta
 
     # 2단계: 임베딩 의미 매칭 (선택적, 라이브러리 없으면 자동 스킵)
     if use_embedding:
