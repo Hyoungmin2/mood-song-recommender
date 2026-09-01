@@ -1231,3 +1231,33 @@ use_embedding=False)`로 확인해보니 `matched`가 `['비', '신비']`로 나
 - "완전 신남" -> ['신남']
 - "오늘 비가 와서 우울해" -> ['우울', '비'] ('비' 단독 매칭은 그대로 유지됨)
 - "장마철이라 우중충해" -> ['장마']
+
+## 앱인토스(토스 미니앱) 배포 검토 - 일단 보류 (2026-08-31)
+
+### 배경
+
+min이 앱인토스(apps-in-toss, 토스 앱 안에서 돌아가는 미니앱 플랫폼) 콘솔의
+"앱 출시" 화면을 보여주며 이 프로젝트를 미니앱으로 올리고 싶다고 함.
+
+### 확인한 사실
+
+공식 문서(developers-apps-in-toss.toss.im) 기준으로, 앱인토스 미니앱은
+"Granite"라는 React Native 기반 프레임워크(TypeScript/JavaScript)로
+만들고, 다음 절차로 `.ait` 번들 파일을 만들어 콘솔에 업로드하는 구조:
+
+1. `npm create granite-app@"^1"`
+2. `npm install` 후 `@apps-in-toss/framework`, `@toss/tds-react-native` 설치
+3. `npx ait init`으로 콘솔에 등록한 정보와 `granite.config.ts` 맞춤
+4. `npm run dev`로 샌드박스 앱에서 테스트(로컬 브라우저는 TDS가 안 돌아감)
+5. `npm run build`로 `<서비스명>.ait` 생성
+6. 콘솔에 업로드해서 출시
+
+즉 지금 프로젝트(Python + Streamlit)를 그대로 옮길 수 있는 게 아니라,
+완전히 별개인 React Native 프론트엔드를 새로 만들고, 기존 추천 로직은
+API 서버로 따로 배포해서 그 프론트엔드가 호출하는 구조로 재구성해야
+함 - 지금까지 해온 작업과는 성격이 다른 큰 규모의 신규 작업.
+
+### 결정
+
+min의 판단으로 지금은 보류 - 지금 진행 중인 stage4(피드백 기반
+재랭킹) 작업을 먼저 마무리한 뒤에 검토하기로 함.
