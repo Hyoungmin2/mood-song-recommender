@@ -11,6 +11,8 @@ Kaggle 'Spotify Tracks Dataset' 확장 + 장르 균등 샘플링
 popularity>=40 필터만 거친 전체 데이터가 3만4천 곡 수준이라 pandas/sklearn으로
 처리하는 데 전혀 부담 없음.
 """
+import re
+
 import pandas as pd
 
 FEATURE_COLS = [
@@ -20,10 +22,50 @@ FEATURE_COLS = [
 ]
 
 
+def normalize_title(title):
+    """
+    "Moral of the Story"/"Moral of the Story (feat. Niall Horan)"/
+    "Moral of the Story (feat. Niall Horan) - Bonus Track"처럼, 같은 곡의
+    다른 에디션(피처링 표기, 리마스터, 라이브 버전, 스페드업 등)이 Kaggle
+    원본에 각각 다른 track_id로 따로 들어있어서 추천 결과에 사실상 같은 곡이
+    여러 번 나오는 문제가 있었음(2026-09-03, ISSUES.md 참고). 괄호 안 내용과
+    흔한 에디션 접미사를 제거해서 "같은 곡"으로 묶기 위한 정규화 함수.
+    """
+    t = title.lower()
+    t = re.sub(r"\(.*?\)", "", t)  # 괄호 안 내용 제거: (feat. ...), (Live), (Remastered) 등
+    t = re.sub(
+        r"\s*-\s*(bonus track|deluxe( edition)?|remaster(ed)?( \d{4})?|"
+        r"radio edit|extended( mix)?|single version|album version|"
+        r"sped up|slowed( \+ reverb)?|8d version|"
+        r"acoustic( version)?|live( version)?|explicit|clean).*$",
+        "", t,
+    )
+    return t.strip()
+
+
+def drop_duplicate_editions(df):
+    """
+    같은 아티스트 + 정규화한 제목이 같은 행이 여러 개면, popularity가 가장 높은
+    버전 하나만 남김. exact-match 중복(drop_duplicates)으로는 못 잡는, "사실상
+    같은 곡인데 제목 표기만 다른" 케이스를 잡기 위한 것.
+    """
+    before = len(df)
+    df = df.copy()
+    df["_norm_title"] = df["track_name"].apply(normalize_title)
+    df = (
+        df.sort_values("popularity", ascending=False)
+        .drop_duplicates(subset=["artists", "_norm_title"], keep="first")
+        .drop(columns=["_norm_title"])
+    )
+    print(f"같은 곡의 다른 에디션 중복 제거: {before}곡 -> {len(df)}곡")
+    return df
+
+
 def load_raw_dataset(csv_path, min_popularity=40):
     df = pd.read_csv(csv_path)
     df = df.dropna(subset=FEATURE_COLS + ["track_name", "artists", "track_genre"])
     df = df.drop_duplicates(subset=["track_name", "artists"])
+    df = drop_duplicate_editions(df)
     # 인기도가 너무 낮은 곡은 제외. 이 데이터셋이 2022년경 스냅샷이라 release_date가
     # 없어서 "최신곡"을 직접 거를 수는 없지만, popularity가 어느 정도 있는 곡들은
     # 최근까지도 꾸준히 스트리밍되는 곡일 가능성이 높아서 체감 품질이 나아짐.

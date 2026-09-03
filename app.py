@@ -3,7 +3,7 @@ Stage 3/4: Stage 2 추천 엔진을 웹 UI로 감싼 Streamlit 앱.
 
 recommend.py / context_parser.py / build_dataset.py는 그대로 재사용하고,
 이 파일은 UI 레이어만 담당함. 무거운 데이터 로딩(SongRecommender 초기화 -
-33,992곡 CSV 읽기 + StandardScaler.fit_transform)은 매 상호작용마다 반복하면
+33,506곡 CSV 읽기 + StandardScaler.fit_transform)은 매 상호작용마다 반복하면
 느려지므로 st.cache_resource로 앱 시작 시 한 번만 로드해서 재사용함.
 
 --- 2026-08-22 수정: 좋아요/스킵 피드백 수집 (stage4 준비) ---
