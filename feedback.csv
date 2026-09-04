@@ -57,3 +57,55 @@ timestamp,user_id,source,context,track_name,artists,track_genre,distance,label
 2026-08-31T06:14:04.698712+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Moral of the Story (feat. Niall Horan),Ashe;Niall Horan,electro,1.484252975186422,like
 2026-08-31T06:14:56.717714+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,drivers license,Olivia Rodrigo,pop,1.4866466243719423,like
 2026-08-31T06:17:39.979391+00:00,형민,mood,mood:비가오고 울적하고 쓸쓸해|artist:billie eilish,Runaway,AURORA,pop,1.48940019021025,like
+2026-08-31T21:43:34.297049+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,Heartbreak Anniversary,Giveon,pop,2.726462599569824,like
+2026-08-31T21:45:46.686367+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,you broke me first,Tate McRae,pop,1.1156937852372177,like
+2026-08-31T21:45:50.242070+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,drivers license,Olivia Rodrigo,pop,1.2083522622311067,like
+2026-08-31T21:46:18.709936+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,Munbe Vaa,Joshua Aaron,pop,1.3595309445930126,skip
+2026-08-31T21:48:26.621433+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,Photograph,Ed Sheeran,pop,1.4018147040382345,like
+2026-08-31T21:48:30.242335+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,Until I Found You,Stephen Sanchez,pop,1.508229927767759,like
+2026-08-31T21:48:52.840035+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,Runaway,AURORA,pop,1.5356402286657385,skip
+2026-08-31T21:49:31.573695+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,Aziyat,Pratsofficial,pop,1.571521009224829,skip
+2026-08-31T21:49:39.842390+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,Chupana Bhi Nahi Aata - Recreated Version,Stebin Ben,pop,1.5736089070230705,skip
+2026-08-31T21:50:36.993018+00:00,형민,mood,mood:비오고 슬퍼|artist:giveon,traitor,Olivia Rodrigo,pop,1.7169696370189897,like
+2026-08-31T21:51:53.236424+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,Peaches (feat. Daniel Caesar & Giveon),Justin Bieber;Daniel Caesar;Giveon,pop,3.1575233403503424,like
+2026-08-31T21:53:09.777175+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,Calm Down (with Selena Gomez),Rema;Selena Gomez,pop,1.6738599056616357,skip
+2026-08-31T21:54:01.877157+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,"Coka 2.0 (From ""Liger"")",Jaani;Lijo George-Dj Chetas;Sukh-E Muzical Doctorz;Lisa Mishra,pop,1.7247952019201482,skip
+2026-08-31T21:54:03.864719+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,"Coka 2.0 (From ""Liger (Telugu)"")",Jaani;Lijo George-Dj Chetas;Ram Miriyala;Geetha Madhuri;Sukh-E Muzical Doctorz,pop,1.8362826014871687,skip
+2026-08-31T21:54:14.769575+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,Naah,Harrdy Sandhu,pop,1.8478509273795454,skip
+2026-08-31T21:54:37.681415+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,Kala Chashma,Amar Arshi;Badshah;Neha Kakkar;Indeep Bakshi;Prem & Hardeep,pop,1.854298334349726,skip
+2026-08-31T21:54:52.218577+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,"Gali Gali (From ""Kgf Chapter 1"")",Neha Kakkar;Tanishk Bagchi,pop,1.8926796052691481,skip
+2026-08-31T21:55:30.764736+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,Lemonade,Diljit Dosanjh,pop,1.9925481544075252,skip
+2026-08-31T21:55:36.429122+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,"Ghalat Fehmi - From ""Superstar""",Asim Azhar;Zenab Fatimah Sultan,pop,2.0242063840816336,skip
+2026-08-31T21:55:58.022023+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:giveon,Mitti De Tibbe,Kaka,pop,2.0279328624232527,skip
+2026-08-31T21:59:41.929142+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:billie eilish,I Didn't Change My Number,Billie Eilish,electro,3.3138675800887074,skip
+2026-08-31T22:02:04.945608+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:billie eilish,"Stay With Me (with Justin Timberlake, Halsey & Pharrell)",Calvin Harris;Justin Timberlake;Halsey;Pharrell Williams,electro,1.6584026421427285,like
+2026-08-31T22:02:50.989848+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:billie eilish,"Stay With Me (with Justin Timberlake, Halsey, & Pharrell)",Calvin Harris;Justin Timberlake;Halsey;Pharrell Williams,electro,1.6584026421427285,like
+2026-08-31T22:04:39.774453+00:00,형민,mood,mood:햇빛이 많고 신비로운 느낌 |artist:billie eilish,Obsessed (with Charlie Puth & Shenseea),Calvin Harris;Charlie Puth;Shenseea,electro,1.894805512539714,skip
+2026-08-31T22:09:39.815845+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,See You Again (feat. Charlie Puth),Wiz Khalifa;Charlie Puth,dance,1.576502738599167,like
+2026-08-31T22:11:00.525109+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,Older,Alec Benjamin,electro,1.029258115399318,like
+2026-08-31T22:11:59.538066+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,Too Good At Goodbyes,Sam Smith,dance,1.2047656457282157,like
+2026-08-31T22:14:20.477173+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,Why Am I Like This?,Orla Gartland,indie-pop,1.2157675625168283,like
+2026-08-31T22:14:57.523511+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,Galveston Bay,Parker McCollum,country,1.2269912363769904,skip
+2026-08-31T22:16:37.496627+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,I Quit Drinking,Kelsea Ballerini;LANY,country,1.2627226503563744,like
+2026-08-31T22:17:38.162927+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,Dancing With Your Ghost,Sasha Alex Sloan,electro,1.270571592107518,like
+2026-08-31T22:19:11.256356+00:00,guest,mood,mood:여유롭게 동네 어슬렁거리는 중|artist:Charlie puth,Blue Ain't Your Color,Keith Urban,country,1.2851509331992068,like
+2026-09-03T08:40:51.067501+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,COPYCAT,Billie Eilish,electro,1.8278727998665651,like
+2026-09-03T08:41:43.712444+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Moral of the Story (feat. Niall Horan) - Bonus Track,Ashe;Niall Horan,electro,1.489770745357478,like
+2026-09-03T08:41:48.346200+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Moral of the Story (feat. Niall Horan),Ashe;Niall Horan,electro,1.5196458803733857,like
+2026-09-03T08:42:49.701528+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Perfect,Ed Sheeran,pop,1.659813779911578,like
+2026-09-03T08:44:39.048931+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Photograph,Ed Sheeran,pop,1.670272690004931,like
+2026-09-03T08:45:52.864663+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Nightmares,Ellise,electro,1.6989365761772768,like
+2026-09-03T08:47:02.365185+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Runaway,AURORA,pop,1.7619835633372267,skip
+2026-09-03T08:47:25.743968+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Moral of the Story,Ashe,electro,1.8535142098706054,like
+2026-09-03T08:49:26.568400+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Tongue,Maribou State;Holly Walker,electro,1.7638650262032958,skip
+2026-09-03T08:51:41.653483+00:00,형민,mood,mood:오늘 유난히 불안해 그리고 어슬렁 거리는 중이야|artist:Billie Eilish,Same Place,JOY.,electro,1.8159418982442188,skip
+2026-09-04T07:29:08.994037+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,"10,000 Hours (with Justin Bieber) - Piano",Dan + Shay;Justin Bieber,country,3.0283817287021857,like
+2026-09-04T07:30:44.009404+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,Tides,Bonobo;Jamila Woods,electronic,1.2918516289622617,like
+2026-09-04T07:34:24.641575+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,Into The Black,Chromatics,electronic,1.4858116481614907,skip
+2026-09-04T07:35:50.805664+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,Out Of Love,Alessia Cara,electro,1.5470312355734601,like
+2026-09-04T07:36:37.108460+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,you broke me first,Tate McRae,pop,1.5699691313278614,like
+2026-09-04T07:37:17.453263+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,my future,Billie Eilish,electro,1.600878466745096,like
+2026-09-04T07:38:39.460016+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,Amour,Izzamuzzic,electronic,1.635252430707444,skip
+2026-09-04T07:39:46.779826+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,Равнодушие,Malbec;Siuzanna,electronic,1.7202388391904175,skip
+2026-09-04T07:39:51.873076+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,Training Wheels,Melanie Martinez,electro,1.68956836192029,like
+2026-09-04T07:40:33.899950+00:00,형민,mood,mood:비오는 날 창 밖 보면서 감성노래 듣고싶어|artist:Justin bieber,You’ll Never Walk Alone,Simon Casey,country,1.7008746021173382,skip
